@@ -95,7 +95,6 @@ class Keyboard(QWidget):
     #инициализация
     def __init__(self):
         super().__init__()
-        self.setWindowTitle("Клавиатура")
         self.setFixedSize(870,350)
         self.buttons = {}
         self.rendering()
