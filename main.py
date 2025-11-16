@@ -2,113 +2,109 @@ import sys
 from PyQt6.QtWidgets import QApplication, QWidget, QLabel, QPushButton
 from PyQt6.QtGui import QMovie, QFont, QPixmap
 from PyQt6.QtCore import Qt
-from test import TypingTren
-from word import WordTren
+from test import TypingTrainer
+from word import WordTrainer
+
 
 class MyApp(QWidget):
     def __init__(self):
-        super.__init__()
+        super().__init__()
         self.setWindowTitle("Клавиатурный тренажёр")
+        self.resize(800, 400)
+        self.setMinimumSize(600, 300)
 
-        self.resize(800,400)
-        self.setMinimumSize(600,300)
+        # === ФОН ===
+        self.background_label = QLabel(self)
+        self.background_label.setPixmap(QPixmap("f.jpg"))
+        self.background_label.setScaledContents(True)
+        self.background_label.lower()
 
-    # ======= ФОН ======== 
-        self.back_label = QLabel(self)
-        self.back_label.setPixmap(QPixmap("f.jpg"))
-        self.back_label.setScaledContents(True)
-        self.back_label.lower()
-
-    # ======= GIF ======== 
-        #ЛЕВАЯ
-        self.gift_left = QLabel(self)
+        # === GIF ===
+        self.gif_left = QLabel(self)
         self.movie_left = QMovie("g.gif")
-        self.gift_left.setMovie(self.movie_left)
-        self.gift_left.start()
+        self.gif_left.setMovie(self.movie_left)
+        self.gif_left.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+        self.movie_left.start()
 
-        #ПРАВАЯ
-        self.gift_rigth = QLabel(self)
-        self.movie_rigth = QMovie("g.gif")
-        self.gift_rigth.setMovie(self.movie_rigth)
-        self.gift_rigth.start()  
+        self.gif_right = QLabel(self)
+        self.movie_right = QMovie("g.gif")
+        self.gif_right.setMovie(self.movie_right)
+        self.gif_right.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+        self.movie_right.start()
 
-    # ===== ЗАГОЛОВОК ======
-        self.title = QLabel("Клавиатурный тренажёр" , self)
-        self.title.setAlignment(Qt.AlignmentFlag.AlignCenter)
-        self.title.setStyleSheet("color: black; font-weigth: bold;")  #CSS
+        # === Заголовок ===
+        self.title_label = QLabel("Клавиатурный тренажёр", self)
+        self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.title_label.setStyleSheet("color: black; font-weight: bold;")
 
-    # ====== КНОПКИ =======
-        self.button_word = QPushButton("Пройти обучение", self)
-        self.button_word.clicked.connect(self.open_word_trainer)
-        self.button_word.setStyleSheet("background-color: rgba(255,255,255,180); font-weight: bold;")
+        # === Кнопки по центру окна ===
+        self.button_train = QPushButton("Пройти обучение", self)
+        self.button_train.clicked.connect(self.open_word_trainer)
+        self.button_train.setStyleSheet("background-color: rgba(255,255,255,180); font-weight: bold;")
 
         self.button_test = QPushButton("Пройти тест", self)
         self.button_test.clicked.connect(self.open_typing_trainer)
         self.button_test.setStyleSheet("background-color: rgba(255,255,255,180); font-weight: bold;")
 
-    # ==== ПРИ ИЗМЕН.ПОЗИЦ ====
+        # Первичная расстановка
         self.resizeEvent(None)
 
-    # ==== ИЗМЕНЕНИЕ ПОЗИЦИИ ====
+    # === Адаптивное позиционирование ===
     def resizeEvent(self, event):
-        w = self.width
-        h = self.height
+        w = self.width()
+        h = self.height()
 
-    # ====== ОКНО =======
-        self.back_label.setGeometry(0,0,w,h)
-        title_size = max(16, h//15)
-        button_size = max(12, h//20)
+        # ==Фон==
+        self.background_label.setGeometry(0, 0, w, h)
 
-    # ====== КНОПКИ =======
-        self.title.setFont(QFont("Segoe Script", title_size , QFont.Weight.Bold))
-        self.button_word.setFont(QFont("Segoe Script", button_size , QFont.Weight.Bold))
-        self.button_test.setFont(QFont("Segoe Script", button_size , QFont.Weight.Bold))
+        # ==шрифт==
+        title_font_size = max(16, h // 15)
+        button_font_size = max(12, h // 20)
 
-    # ====== GIF =======
+        self.title_label.setFont(QFont("Segoe Script", title_font_size, QFont.Weight.Bold))
+        self.button_train.setFont(QFont("Segoe Script", button_font_size, QFont.Weight.Bold))
+        self.button_test.setFont(QFont("Segoe Script", button_font_size, QFont.Weight.Bold))
+
+        # ==GIF==
         gif_width = int(w * 0.08)
         gif_height = int(h * 0.15)
 
-        #====== ЛЕВАЯ =======
-        self.gift_left.setGeometry(20 , 20 , gif_width , gif_height)
-        self.movie_left.setScaledSize(self.gift_left.size())
+        self.gif_left.setGeometry(20, 20, gif_width, gif_height)
+        self.movie_left.setScaledSize(self.gif_left.size())
 
-        #====== ПРАВАЯ =======
-        self.gift_rigth.setGeometry(w - gif_width - 20 , 20 , gif_width , gif_height)
-        self.movie_rigth.setScaledSize(self.gift_rigth.size())
+        self.gif_right.setGeometry(w - gif_width - 20, 20, gif_width, gif_height)
+        self.movie_right.setScaledSize(self.gif_right.size())
 
-        # ===== ЗАГОЛОВОК ======
-        title_x = 20 + gif_width + 10 
+        # ==Заголовок==
+        title_x = 20 + gif_width + 10
         title_width = w - 2*(gif_width + 20 + 10)
         title_height = gif_height
-        self.title.setGeometry(title_x, 20 , title_width , title_height)
+        self.title_label.setGeometry(title_x, 20, title_width, title_height)
 
-        # ====== КНОПКИ =======
-        button_weigth = int(w*0.5)
-        button_heigth = int(h*0.2)
+        # ==Кнопки==
+        button_width = int(w * 0.5)
+        button_height = int(h * 0.20)
         space_between = int(h * 0.05)
+        y_start = title_height + 40  
+        x_center = (w - button_width) // 2
 
-        y_start = title_height + 40
-        x_center = (w - button_weigth)//2
+        self.button_train.setGeometry(x_center, y_start, button_width, button_height)
+        self.button_test.setGeometry(x_center, y_start + button_height + space_between, button_width, button_height)
 
-        self.button_word.setGeometry(x_center , y_start , button_weigth , button_heigth)
-        self.button_test.setGeometry(x_center , y_start + button_heigth + space_between , button_weigth , button_heigth)
+    # ==окона==
+    def open_word_trainer(self):
+        self.trainer_window = WordTrainer(parent_app=self)  
+        self.trainer_window.show()
+        self.hide()  
 
-    # === Открытие окна обучения  ===
-    def open_word_tren(self):
-        self.tren_windows = TypingTren(app_first = self)
-        self.tren_windows.show()
+    def open_typing_trainer(self):
+        self.test_window = TypingTrainer(parent_app=self)
+        self.test_window.show()
         self.hide()
-
-    # === Открытие окна тестирования ===
-    def open_test_tren(self):
-        self.tren_window = WordTren(app_first = self)
-        self.tren_window.show()
-        self.hide()
-
-
+        
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
-    window = MyApp
+    window = MyApp()
     window.show()
     sys.exit(app.exec())
