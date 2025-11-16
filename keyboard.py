@@ -90,8 +90,8 @@ keyboard_buttoms = [
     ('Ctrl_R', 770, 300, 70, 50, 'gray'),
 ]
 
-class Keyboerd(QWidget):
-    
+class Keyboard(QWidget):
+
     #инициализация
     def __init__(self):
         super().__init__()
@@ -102,6 +102,19 @@ class Keyboerd(QWidget):
     
     #отрисовка
     def rendering(self):
+        for name,x,y,w,h,color in keyboard_buttoms:
+            buttoms = QPushButton(name,self)
+            buttoms.setGeometry(x,y,w,h)
+            buttoms.setStyleSheet(f"background-color: {color} ; font-weight : bont;")
+            buttoms.clicked.connect()
+            self.buttons[name] = buttoms
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.args)
+    keyboard_windows = Keyboard()
+    keyboard_windows.show()
+    sys.exit(app.exec())
 
         
 
