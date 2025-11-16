@@ -77,8 +77,8 @@ class MyApp(QWidget):
         self.movie_rigth.setScaledSize(self.gift_rigth.size())
 
         # ===== ЗАГОЛОВОК ======
-        title_x = 20 + gif_width + 10 #отступ + ширина 
-        title_width = w - 2*(gif_width + 20 + 10)#щирина заголовка
+        title_x = 20 + gif_width + 10 
+        title_width = w - 2*(gif_width + 20 + 10)
         title_height = gif_height
         self.title.setGeometry(title_x, 20 , title_width , title_height)
 
