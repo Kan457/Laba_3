@@ -87,6 +87,7 @@ class KeyboardWidget(QWidget):
                 parent.insert_char(ch)
             except Exception as e:
                 print(f"Ошибка обработки клавиши {name}:", e)
+
         except Exception as e:
             print("Ошибка в click:", e)
 
@@ -149,17 +150,16 @@ class HelpDialog(QDialog):
             super().__init__()
             try:
                 self.setWindowTitle("Помощь")
-                self.setMinimumSize(400, 300)  # минимальный размер окна
+                self.setMinimumSize(400, 300) 
             except Exception as e:
                 print("Ошибка установки параметров окна HelpDialog:", e)
 
-            # === Основной лейаут ===
             try:
                 self.layout = QVBoxLayout(self)
                 self.layout.setContentsMargins(0, 0, 0, 0)
                 self.layout.setSpacing(0)
             except Exception as e:
-                print("Ошибка создания лейаута HelpDialog:", e)
+                print("Ошибка создания окна HelpDialog:", e)
 
             # === Картинка ===
             try:
@@ -181,7 +181,7 @@ class HelpDialog(QDialog):
             except Exception as e:
                 print("Ошибка создания метки картинки:", e)
 
-            # === Кнопка "Закрыть" внизу ===
+            # === "Закрыть"  ===
             try:
                 self.btn_close = QPushButton("Закрыть", self)
                 self.btn_close.setFont(QFont("Segoe Script", 14))
@@ -300,7 +300,7 @@ class WordTrainer(QWidget):
                 self.main_area.addWidget(self.error_label, alignment=Qt.AlignmentFlag.AlignCenter)
                 self.main_area.addStretch(1)
             except Exception as e:
-                print("Ошибка создания лейаутов:", e)
+                print("Ошибка создания интерфейса:", e)
 
             try:
                 self.keyboard = KeyboardWidget(self)

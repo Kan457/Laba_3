@@ -50,7 +50,6 @@ class MyApp(QWidget):
             if not self.movie_left.isValid():
                 print("GIF g.gif не найден ")  
             self.gif_left.setMovie(self.movie_left)
-            self.gif_left.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
             self.movie_left.start()
         except Exception as e:
             print("Ошибка при загрузке левого GIF:", e)  
@@ -145,12 +144,7 @@ class MyApp(QWidget):
             x_center = (w - button_width) // 2
 
             self.button_train.setGeometry(x_center, y_start, button_width, button_height)
-            self.button_test.setGeometry(
-                x_center,
-                y_start + button_height + space_between,
-                button_width,
-                button_height
-            )
+            self.button_test.setGeometry(x_center,y_start + button_height + space_between,button_width,button_height)
 
         except Exception as e:
             print("Ошибка в resizeEvent:", e)  
