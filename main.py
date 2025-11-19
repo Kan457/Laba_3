@@ -16,6 +16,7 @@ except Exception as e:
     WordTrainer = None
 
 
+#====Главное окно приложения====
 class MyApp(QWidget):
     def __init__(self):
         super().__init__()
@@ -28,7 +29,7 @@ class MyApp(QWidget):
         except Exception as e:
             print("Ошибка установки параметров окна:", e)  
 
-        # ==== ФОНОВОЕ ИЗОБРАЖЕНИЕ ====
+        # ==== ФОН ====
         try:
             self.background_label = QLabel(self)
             pix = QPixmap("f.jpg")
@@ -63,7 +64,6 @@ class MyApp(QWidget):
             if not self.movie_right.isValid():
                 print("GIF g.gif не найден ")  
             self.gif_right.setMovie(self.movie_right)
-            self.gif_right.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
             self.movie_right.start()
         except Exception as e:
             print("Ошибка при загрузке правого GIF:", e)  
@@ -75,8 +75,8 @@ class MyApp(QWidget):
             self.title_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
             self.title_label.setStyleSheet("color: black; font-weight: bold;")
         except Exception as e:
-            print("Ошибка создания заголовка:", e)  # === ОБРАБОТКА ИСКЛЮЧЕНИЯ ===
-
+            print("Ошибка создания заголовка:", e)  
+            
         # ==== КНОПКИ ====
 
         try:
@@ -158,12 +158,14 @@ class MyApp(QWidget):
         except Exception as e:
             print("Ошибка при открытии WordTrainer:", e) 
 
+    
     def safe_open_typing_trainer(self):
         try:
             self.open_typing_trainer()
         except Exception as e:
             print("Ошибка при открытии TypingTrainer:", e)  
 
+    
     def open_word_trainer(self):
         if WordTrainer is None:
             print("WordTrainer не загружен!") 
@@ -172,6 +174,7 @@ class MyApp(QWidget):
         self.trainer_window.show()
         self.hide()
 
+    
     def open_typing_trainer(self):
         if TypingTrainer is None:
             print("TypingTrainer не загружен!") 

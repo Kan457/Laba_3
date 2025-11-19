@@ -6,8 +6,7 @@ from PyQt6.QtWidgets import (
 from PyQt6.QtGui import QFont, QPixmap, QPainter
 from PyQt6.QtCore import Qt, QTimer, QEvent
 
-from keyboard import keyboard_buttons  # файл с раскладкой клавиатуры
-
+from keyboard import keyboard_buttons  
 
 BASE_W = 900
 BASE_H = 700
@@ -15,6 +14,7 @@ BASE_KB_H = 350
 BASE_KB_W = 870
 
 
+#====Виртуальная клавиатура ====
 class KeyboardWidget(QWidget):
     def __init__(self, parent=None):
         try:
@@ -35,6 +35,7 @@ class KeyboardWidget(QWidget):
         except Exception as e:
             print("Критическая ошибка в конструкторе KeyboardWidget:", e)
 
+    #====Создание кнопок клавиатуры====
     def make_buttons(self):
         try:
             for name, x, y, w, h, color in keyboard_buttons:
@@ -53,6 +54,7 @@ class KeyboardWidget(QWidget):
         except Exception as e:
             print("Ошибка создания клавиатуры:", e)
 
+    #====Обработка кликов по кнопкам====
     def click(self, name):
         try:
             parent = self.parent()
@@ -91,6 +93,7 @@ class KeyboardWidget(QWidget):
         except Exception as e:
             print("Ошибка в click:", e)
 
+    #====Подсветка ожидаемой клавиши====
     def highlight(self, key):
         try:
             for btn in self.buttons.values():
@@ -123,6 +126,7 @@ class KeyboardWidget(QWidget):
         except Exception as e:
             print("Ошибка в highlight:", e)
 
+    #====Масштабирование клавиатуры====
     def resize_keyboard(self, W, H):
         try:
             scale_x = W / BASE_KB_W
@@ -144,7 +148,9 @@ class KeyboardWidget(QWidget):
             print("Ошибка в resize_keyboard:", e)
 
 
+#==== Окно помощи ====
 class HelpDialog(QDialog):
+    
     def __init__(self):
         try:
             super().__init__()
@@ -175,7 +181,7 @@ class HelpDialog(QDialog):
                 except Exception as e:
                     print("Ошибка загрузки картинки:", e)
                     self.pixmap = QPixmap()
-                self.lbl.setScaledContents(True)  # масштабирование по размеру окна
+                self.lbl.setScaledContents(True) 
                 if hasattr(self, 'layout'):
                     self.layout.addWidget(self.lbl)
             except Exception as e:
@@ -194,7 +200,8 @@ class HelpDialog(QDialog):
         except Exception as e:
             print("Критическая ошибка в конструкторе HelpDialog:", e)
 
-    # Обновляем размер картинки при изменении окна
+
+    #====Обновление размера изображения====
     def resizeEvent(self, event):
         try:
             super().resizeEvent(event)
@@ -208,6 +215,7 @@ class HelpDialog(QDialog):
             print("Ошибка в resizeEvent HelpDialog:", e)
 
 
+#====Тренажёр набора слов====
 class WordTrainer(QWidget):
     def __init__(self, parent_app=None):
         try:
@@ -236,7 +244,7 @@ class WordTrainer(QWidget):
                 self.index = 0
                 self.errors = 0
 
-            # === СООБЩЕНИЕ ОБ ОШИБКЕ ===
+            # === ОШИБКА! ===
             try:
                 self.error_msg = QLabel("")
                 self.error_msg.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -332,6 +340,7 @@ class WordTrainer(QWidget):
         except Exception as e:
             print("Критическая ошибка в конструкторе WordTrainer:", e)
 
+    #==== Возвр. в гл. окно ====
     def go_to_main(self):
         try:
             self.close()
@@ -343,6 +352,7 @@ class WordTrainer(QWidget):
         except Exception as e:
             print("Ошибка выхода:", e)
 
+    #==== Отрисовка фона ====
     def paintEvent(self, event):
         try:
             painter = QPainter(self)
@@ -351,6 +361,7 @@ class WordTrainer(QWidget):
         except Exception as e:
             print("Ошибка в paintEvent:", e)
 
+    #==== Загрузка слов ====
     def load_words(self):
         try:
             with open("word.txt", "r", encoding="utf-8") as f:
@@ -362,6 +373,7 @@ class WordTrainer(QWidget):
             print("Ошибка чтения файла word.txt:", e)
             return ["пример", "слово", "текст"]
 
+    #====Отображение текущего слова====
     def show_word(self):
         try:
             if self.index < len(self.words):
@@ -379,6 +391,7 @@ class WordTrainer(QWidget):
         except Exception as e:
             print("Ошибка в show_word:", e)
 
+    #==== Всплывающие сообщенеие ошибки ====
     def show_error_message(self):
         try:
             if hasattr(self, 'error_msg'):
@@ -388,6 +401,7 @@ class WordTrainer(QWidget):
         except Exception as e:
             print("Ошибка показа сообщения об ошибке:", e)
 
+    #==== Вставка символа из в.кл ====
     def insert_char(self, ch):
         try:
             if hasattr(self, 'input'):
@@ -396,6 +410,7 @@ class WordTrainer(QWidget):
         except Exception as e:
             print("Ошибка вставки символа:", e)
 
+    #==== Проверка ввода ====
     def check_live(self):
         try:
             if self.index < len(self.words):
@@ -410,6 +425,7 @@ class WordTrainer(QWidget):
         except Exception as e:
             print("Ошибка в check_live:", e)
 
+    #==== Проверка слова ====
     def check_word(self):
         try:
             if self.index < len(self.words):
@@ -429,6 +445,7 @@ class WordTrainer(QWidget):
         except Exception as e:
             print("Ошибка в check_word:", e)
 
+    #==== Масштаб элементов ====
     def resize_all(self):
         try:
             W = self.width()
@@ -462,6 +479,7 @@ class WordTrainer(QWidget):
         except Exception as e:
             print("Ошибка в resize_all:", e)
 
+    #==== изменения размеров окна====
     def resizeEvent(self, event):
         try:
             super().resizeEvent(event)
@@ -469,6 +487,7 @@ class WordTrainer(QWidget):
         except Exception as e:
             print("Ошибка в resizeEvent:", e)
 
+    #==== Варианты для подсветки клавиш====
     def eventFilter(self, obj, event):
         try:
             if obj is self.input:
@@ -498,6 +517,7 @@ class WordTrainer(QWidget):
             print("Ошибка в eventFilter:", e)
         return super().eventFilter(obj, event)
 
+    #====Подсветка ожидаемого символа====
     def highlight_expected(self):
         try:
             if self.index < len(self.words):

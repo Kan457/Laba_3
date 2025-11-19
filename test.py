@@ -8,6 +8,8 @@ from keyboard import keyboard_buttons
 
 RECORD_FILE = "record.txt"  
 
+#==== Виртуальная клавиатура ====
+
 class KeyboardWidget(QWidget):
     def __init__(self, parent, input_field):
         try:
@@ -22,7 +24,7 @@ class KeyboardWidget(QWidget):
         except Exception as e:
             print("Критическая ошибка в конструкторе KeyboardWidget:", e)
 
-    #=====СОЗДАНИЕ КНОПОК======
+    #===== СОЗДАНИЕ КНОПОК ======
     def create_keyboard(self):
         try:
             font = QFont("Segoe Script", 12)
@@ -43,7 +45,7 @@ class KeyboardWidget(QWidget):
         except Exception as e:
             print("Ошибка создания клавиатуры:", e)
 
-    #======ПОДСВЕТКА НУЖНОЙ КЛАВИШИ======
+    #====== ПОДСВЕТКА НУЖНОЙ КЛАВИШИ ======
     def highlight_key(self, key):
         try:
             for idx, (name, *_rest) in enumerate(keyboard_buttons):
@@ -69,7 +71,7 @@ class KeyboardWidget(QWidget):
         except Exception as e:
             print("Ошибка в highlight_key:", e)
 
-    #======КЛИКИ======
+    #==== Обработка нажатия виртуальной клавиши ====
     def insert_key(self, key):
         try:
             cursor = self.input_field.textCursor()
@@ -95,7 +97,7 @@ class KeyboardWidget(QWidget):
         except Exception as e:
             print("Ошибка в insert_key:", e)
 
-    #======ИЗМЕНЕНИЕ РАЗМЕРА======
+    #====== ИЗМЕНЕНИЕ РАЗМЕРА ======
     def resizeEvent(self, event):
         try:
             super().resizeEvent(event)
@@ -117,6 +119,7 @@ class KeyboardWidget(QWidget):
             print("Ошибка в resizeEvent клавиатуры:", e)
 
 
+#====Тренажёр набора текста====
 class TypingTrainer(QWidget):
     def __init__(self, parent_app=None):
         try:
@@ -191,6 +194,7 @@ class TypingTrainer(QWidget):
         except Exception as e:
             print("Критическая ошибка в конструкторе TypingTrainer:", e)
 
+    #==== Создание элементов интерфейса ====
     def init_ui(self):
         try:
             self.original_display = QTextEdit(self)
@@ -219,7 +223,8 @@ class TypingTrainer(QWidget):
         except Exception as e:
             print("Ошибка создания кнопки выхода:", e)
 
-    # =================== виртуальная клавиатура ===================
+    # ==== В. клав =====
+    #====Подсветка символа и клавиши====
     def update_caret_and_keyboard(self):
         try:
             pos = len(self.user_input.toPlainText())
@@ -250,11 +255,12 @@ class TypingTrainer(QWidget):
         except Exception as e:
             print("Ошибка в update_caret_and_keyboard:", e)
 
-    # =================== Физическая клавиатура ====================
+    # ===== Ф. кл =====
+    #==== Обработка нажатий ====
     def keyPressEvent(self, event: QKeyEvent):
         try:
             if len(self.user_input.toPlainText()) == 0 and not self.timer_running:
-                return  # таймер не запускается пока нет первой буквы
+                return 
 
             pos = len(self.user_input.toPlainText())
             if pos >= len(self.original_text):
@@ -304,13 +310,15 @@ class TypingTrainer(QWidget):
         except Exception as e:
             print("Ошибка в keyPressEvent:", e)
 
+    #==== Обработка отпускания клавиш ====
     def keyReleaseEvent(self, event):
         try:
             self.update_caret_and_keyboard()
         except Exception as e:
             print("Ошибка в keyReleaseEvent:", e)
 
-    # =================== Основная логика ==========================
+    
+    #==== Загрузка файла ====
     def load_text_from_file(self):
         try:
             with open("text.txt", "r", encoding="utf-8") as f:
@@ -319,11 +327,12 @@ class TypingTrainer(QWidget):
             self.original_text = "Файл text.txt не найден."
         self.original_display.setPlainText(self.original_text)
 
+    #====Обновление подсветки введённого текста====
     def update_display(self):
         try:
             user_text = self.user_input.toPlainText()
 
-            # Таймер запускается только после первой буквы
+            
             if len(user_text) == 1 and not self.timer_running:
                 try:
                     self.start_timer()
@@ -381,7 +390,9 @@ class TypingTrainer(QWidget):
         except Exception as e:
             print("Ошибка в update_display:", e)
 
-    # ================= Таймер ==================
+    # === Таймер ===
+
+    #==== Запуск таймера ====
     def start_timer(self):
         try:
             self.time = QTime(0, 0, 0)
@@ -391,6 +402,7 @@ class TypingTrainer(QWidget):
         except Exception as e:
             print("Ошибка запуска таймера:", e)
 
+    #==== Обновление таймера====
     def update_timer(self):
         try:
             self.time = self.time.addSecs(1)
@@ -399,6 +411,7 @@ class TypingTrainer(QWidget):
         except Exception as e:
             print("Ошибка обновления таймера:", e)
 
+    #==== Остановка таймера ====
     def stop_timer(self):
         try:
             if hasattr(self, 'timer'):
@@ -407,7 +420,9 @@ class TypingTrainer(QWidget):
         except Exception as e:
             print("Ошибка остановки таймера:", e)
 
-    # ================= Рекорды =================
+    # === Рекорд ====
+
+    #==== Загрузка рекорда ====
     def load_record(self):
         try:
             if os.path.exists(RECORD_FILE):
@@ -425,6 +440,7 @@ class TypingTrainer(QWidget):
         except Exception as e:
             print("Ошибка в load_record:", e)
 
+    #==== Сохранение рекорда ====
     def save_record(self):
         try:
             if self.best_time:
@@ -433,6 +449,7 @@ class TypingTrainer(QWidget):
         except Exception as e:
             print("Ошибка сохранения рекорда:", e)
 
+    #==== Проверка нового рекорда ====
     def check_record(self):
         try:
             if self.error_count > 0:
@@ -449,7 +466,9 @@ class TypingTrainer(QWidget):
         except Exception as e:
             print("Ошибка проверки рекорда:", e)
 
-    # ================= Новый сеанс =================
+    # ==== Попытка =====
+
+    #====Запуск нового сеанса====
     def start_new_session(self):
         try:
             if hasattr(self, 'user_input'):
@@ -467,7 +486,9 @@ class TypingTrainer(QWidget):
         except Exception as e:
             print("Ошибка начала нового сеанса:", e)
 
-    # ================= Выход ===================
+    # === Выход ===
+
+    #==== Главное окно ====
     def go_to_main(self):
         try:
             self.close()
@@ -479,11 +500,13 @@ class TypingTrainer(QWidget):
         except Exception as e:
             print("Ошибка выхода:", e)
 
-    # ================= Разметка ==================
+    # === Размещение элементов ===
+
     def resizeEvent(self, event):
         try:
             super().resizeEvent(event)
-            w, h = self.width(), self.height()
+            w = self.width()
+            h = self.height()
             
             try:
                 if hasattr(self, 'background_label'):
@@ -542,7 +565,6 @@ class TypingTrainer(QWidget):
             print("Ошибка в resizeEvent:", e)
 
 
-# ============= Запуск =============
 if __name__ == "__main__":
     try:
         app = QApplication(sys.argv)
